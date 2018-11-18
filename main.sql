@@ -16,10 +16,9 @@ CREATE TABLE earthquake (
     date DATE,
     latitude NUMERIC(7,3),
     longitude NUMERIC(7,3),
-    magnitude NUMERIC
+    magnitude NUMERIC,
+    PRIMARY KEY (date, latitude, longitude, magnitude)
 );
-
--- \COPY earthquake (date, latitude, longitude, magnitude) FROM '../../CSCI403_Final_Project/Data/earthquake-min.csv' DELIMITER ',' CSV;
 
 CREATE TABLE earthquake_raw (
     date DATE,
@@ -55,7 +54,8 @@ CREATE TABLE tsunami (
     country TEXT,
     latitude NUMERIC,
     longitude NUMERIC,
-    intensity NUMERIC
+    intensity NUMERIC,
+    PRIMARY KEY (year, month, date, magnitude, latitude, longitude, intensity)
 );
 
 \COPY tsunami FROM '../../CSCI403_Final_Project/Data/tsunami-min.csv' DELIMITER ',' CSV;
@@ -66,7 +66,53 @@ CREATE TABLE volcano (
     day NUMERIC,
     country TEXT,
     latitude NUMERIC,
-    longitude NUMERIC
+    longitude NUMERIC,
+    vei INTEGER,
+    PRIMARY KEY (year, month, day, latitude, longitude)
 );
 
-\COPY volcano FROM '../../CSCI403_Final_Project/Data/volcano-min.csv' DELIMITER ',' CSV;
+
+CREATE TABLE volcano_raw (
+    year NUMERIC,
+    month NUMERIC,
+    day NUMERIC,
+    tsu TEXT,
+    eq TEXT,
+    name TEXT,
+    location TEXT,
+    country TEXT,
+    latitude NUMERIC,
+    longitude NUMERIC,
+    elevation NUMERIC,
+    typeOf TEXT,
+    status TEXT,
+    time TEXT,
+    vei INTEGER,
+    agent TEXT,
+    deaths INTEGER,
+    deathDesc INTEGER,
+    missing INTEGER,
+    missingDesc INTEGER,
+    injuries INTEGER,
+    injuriesDesc INTEGER,
+    damage_mil NUMERIC,
+    damageDesc INTEGER,
+    houseDest INTEGER,
+    HouseDestDesc INTEGER,
+    totalDeath INTEGER,
+    totalDeathDesc INTEGER,
+    totalMissing INTEGER,
+    totalMissingDesc INTEGER,
+    totalInjuries INTEGER,
+    totalInjuriesDesc INTEGER,
+    totalDamage_mil NUMERIC,
+    totalDamage_milDesc INTEGER,
+    totalHouseDest INTEGER,
+    totalHouseDestDesc INTEGER
+);
+
+\COPY volcano_raw FROM '../../CSCI403_Final_Project/Data/volcano.csv' DELIMITER ',' CSV;
+DELETE FROM volcano_raw WHERE day IS NULL OR year IS NULL OR month IS NULL;
+
+INSERT INTO volcano SELECT year, month, day, country, latitude, longitude, vei FROM volcano_raw;
+UPDATE volcano SET vei = 1 WHERE vei IS NULL;
