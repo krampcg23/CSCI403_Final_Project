@@ -13,11 +13,11 @@ DROP TABLE IF EXISTS earthquake CASCADE;
 DROP TABLE IF EXISTS earthquake_raw CASCADE;
 
 CREATE TABLE earthquake (
+    ID INTEGER PRIMARY KEY,
     date DATE,
     latitude NUMERIC(7,3),
     longitude NUMERIC(7,3),
-    magnitude NUMERIC,
-    PRIMARY KEY (date, latitude, longitude, magnitude)
+    magnitude NUMERIC
 );
 
 CREATE TABLE earthquake_raw (
@@ -45,8 +45,12 @@ CREATE TABLE earthquake_raw (
 );
 
 \COPY earthquake_raw FROM '../../CSCI403_Final_Project/Data/earthquake.csv' DELIMITER ',' CSV;
+ALTER TABLE earthquake_raw add column idSerial SERIAL;
+DELETE FROM earthquake_raw WHERE latitude IS NULL OR longitude IS NULL;
+INSERT INTO earthquake SELECT idSerial, date, latitude, longitude, magnitude FROM earthquake_raw;
 
 CREATE TABLE tsunami (
+    ID INTEGER PRIMARY KEY,
     year NUMERIC,
     month NUMERIC,
     date NUMERIC,
@@ -54,8 +58,7 @@ CREATE TABLE tsunami (
     country TEXT,
     latitude NUMERIC,
     longitude NUMERIC,
-    intensity NUMERIC,
-    PRIMARY KEY (year, month, date, magnitude, latitude, longitude, intensity)
+    intensity NUMERIC
 );
 
 CREATE TABLE tsunami_raw (
@@ -107,16 +110,19 @@ CREATE TABLE tsunami_raw (
 );
 
 \COPY tsunami_raw FROM '../../CSCI403_Final_Project/Data/sources.csv' DELIMITER ',' CSV;
+ALTER TABLE tsunami_raw add column idSerial SERIAL;
+DELETE FROM tsunami_raw WHERE latitude IS NULL OR longitude IS NULL;
+INSERT INTO tsunami SELECT idSerial, year, month, day, primary_magnitude, country, latitude, longitude, intensity_soloviev FROM tsunami_raw;
 
 CREATE TABLE volcano (
+    ID INTEGER PRIMARY KEY,
     year NUMERIC,
     month NUMERIC,
     day NUMERIC,
     country TEXT,
     latitude NUMERIC,
     longitude NUMERIC,
-    vei INTEGER,
-    PRIMARY KEY (year, month, day, latitude, longitude)
+    vei INTEGER
 );
 
 
@@ -160,7 +166,7 @@ CREATE TABLE volcano_raw (
 );
 
 \COPY volcano_raw FROM '../../CSCI403_Final_Project/Data/volcano.csv' DELIMITER ',' CSV;
-DELETE FROM volcano_raw WHERE day IS NULL OR year IS NULL OR month IS NULL;
-
-INSERT INTO volcano SELECT year, month, day, country, latitude, longitude, vei FROM volcano_raw;
+ALTER TABLE volcano_raw add column idSerial SERIAL;
+DELETE FROM volcano_raw WHERE day IS NULL OR year IS NULL OR month IS NULL OR latitude IS NULL OR longitude IS NULL;
+INSERT INTO volcano SELECT idSerial, year, month, day, country, latitude, longitude, vei FROM volcano_raw;
 UPDATE volcano SET vei = 1 WHERE vei IS NULL;
