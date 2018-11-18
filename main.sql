@@ -109,7 +109,7 @@ CREATE TABLE tsunami_raw (
     HOUSE_DESTRUCTION_TOTAL NUMERIC
 );
 
-\COPY tsunami_raw FROM '../../CSCI403_Final_Project/Data/sources.csv' DELIMITER ',' CSV;
+\COPY tsunami_raw FROM '../../CSCI403_Final_Project/Data/tsunami.csv' DELIMITER ',' CSV;
 ALTER TABLE tsunami_raw add column idSerial SERIAL;
 DELETE FROM tsunami_raw WHERE latitude IS NULL OR longitude IS NULL;
 INSERT INTO tsunami SELECT idSerial, year, month, day, primary_magnitude, country, latitude, longitude, intensity_soloviev FROM tsunami_raw;
@@ -170,3 +170,8 @@ ALTER TABLE volcano_raw add column idSerial SERIAL;
 DELETE FROM volcano_raw WHERE day IS NULL OR year IS NULL OR month IS NULL OR latitude IS NULL OR longitude IS NULL;
 INSERT INTO volcano SELECT idSerial, year, month, day, country, latitude, longitude, vei FROM volcano_raw;
 UPDATE volcano SET vei = 1 WHERE vei IS NULL;
+
+
+\COPY (SELECT * FROM tsunami WHERE year >= 1900) TO '../../CSCI403_Final_Project/Data/tsunamiQuery.csv' WITH csv header;
+\COPY (SELECT * FROM volcano) TO '../../CSCI403_Final_Project/Data/volcanoQuery.csv' WITH csv header;
+\COPY (SELECT * FROM earthquake) TO '../../CSCI403_Final_Project/Data/earthquakeQuery.csv' WITH csv header;
