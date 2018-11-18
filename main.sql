@@ -48,6 +48,7 @@ CREATE TABLE earthquake_raw (
 ALTER TABLE earthquake_raw add column idSerial SERIAL;
 DELETE FROM earthquake_raw WHERE latitude IS NULL OR longitude IS NULL;
 INSERT INTO earthquake SELECT idSerial, date, latitude, longitude, magnitude FROM earthquake_raw;
+UPDATE earthquake SET magnitude = 1 WHERE magnitude IS NULL;
 
 CREATE TABLE tsunami (
     ID INTEGER PRIMARY KEY,
@@ -113,6 +114,7 @@ CREATE TABLE tsunami_raw (
 ALTER TABLE tsunami_raw add column idSerial SERIAL;
 DELETE FROM tsunami_raw WHERE latitude IS NULL OR longitude IS NULL;
 INSERT INTO tsunami SELECT idSerial, year, month, day, primary_magnitude, country, latitude, longitude, intensity_soloviev FROM tsunami_raw;
+UPDATE tsunami SET magnitude = 1 WHERE magnitude IS NULL;
 
 CREATE TABLE volcano (
     ID INTEGER PRIMARY KEY,
@@ -122,7 +124,7 @@ CREATE TABLE volcano (
     country TEXT,
     latitude NUMERIC,
     longitude NUMERIC,
-    vei INTEGER
+    magnitude INTEGER
 );
 
 
@@ -169,9 +171,9 @@ CREATE TABLE volcano_raw (
 ALTER TABLE volcano_raw add column idSerial SERIAL;
 DELETE FROM volcano_raw WHERE day IS NULL OR year IS NULL OR month IS NULL OR latitude IS NULL OR longitude IS NULL;
 INSERT INTO volcano SELECT idSerial, year, month, day, country, latitude, longitude, vei FROM volcano_raw;
-UPDATE volcano SET vei = 1 WHERE vei IS NULL;
+UPDATE volcano SET magnitude = 1 WHERE magnitude IS NULL;
 
 
-\COPY (SELECT * FROM tsunami WHERE year >= 1900) TO '../../CSCI403_Final_Project/Data/tsunamiQuery.csv' WITH csv header;
+\COPY (SELECT * FROM tsunami WHERE year >= 2010) TO '../../CSCI403_Final_Project/Data/tsunamiQuery.csv' WITH csv header;
 \COPY (SELECT * FROM volcano) TO '../../CSCI403_Final_Project/Data/volcanoQuery.csv' WITH csv header;
-\COPY (SELECT * FROM earthquake) TO '../../CSCI403_Final_Project/Data/earthquakeQuery.csv' WITH csv header;
+\COPY (SELECT * FROM earthquake WHERE date >= '1-1-2010'::date) TO '../../CSCI403_Final_Project/Data/earthquakeQuery.csv' WITH csv header;
