@@ -12,7 +12,7 @@ for k in range(0,len(setOfFiles)):
     latitudes = []
     longitudes = []
     magnitude = []
-    directory = 'Data/' + setOfFiles[k] + 'Query.csv'
+    directory = 'Data/' + setOfFiles[k] + 'QueryMag.csv'
     with open(directory) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:

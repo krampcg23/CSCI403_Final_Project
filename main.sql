@@ -177,3 +177,7 @@ UPDATE volcano SET magnitude = 1 WHERE magnitude IS NULL;
 \COPY (SELECT * FROM tsunami WHERE year >= 2010) TO '../../CSCI403_Final_Project/Data/tsunamiQuery.csv' WITH csv header;
 \COPY (SELECT * FROM volcano) TO '../../CSCI403_Final_Project/Data/volcanoQuery.csv' WITH csv header;
 \COPY (SELECT * FROM earthquake WHERE date >= '1-1-2010'::date) TO '../../CSCI403_Final_Project/Data/earthquakeQuery.csv' WITH csv header;
+
+\COPY (SELECT * FROM tsunami WHERE magnitude >= 8.5) TO '../../CSCI403_Final_Project/Data/tsunamiQueryMag.csv' WITH csv header;
+\COPY (SELECT * FROM volcano WHERE magnitude >= 4) TO '../../CSCI403_Final_Project/Data/volcanoQueryMag.csv' WITH csv header;
+\COPY (SELECT * FROM earthquake WHERE magnitude >= 8) TO '../../CSCI403_Final_Project/Data/earthquakeQueryMag.csv' WITH csv header;
