@@ -7,4 +7,6 @@ Alex DeGroat, Clayton Kramp, Jeffrey Stenerson, Allee Zarrini
 
 On your databse, type `\i <your directory>/CSCI403_Final_Project/main.sql` to run our SQL script
 
+Run the python script with `python3 visualize.py`
+
 The `visualize.py` file will create a `mymap.html` file, open that to run the interactive map file.
